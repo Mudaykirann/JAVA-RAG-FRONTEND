@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Bot, Database, MessageSquare, FileText, Settings } from 'lucide-react';
+import { Home, Bot, Database, MessageSquare, FileText, Settings } from 'lucide-react';
+import { HomePage } from './components/HomePage';
 import { RagAssistant } from './components/RagAssistant';
 import { DocumentIngestion } from './components/DocumentIngestion';
 import { ChatPlayground } from './components/ChatPlayground';
@@ -10,14 +11,15 @@ import { checkBackendHealth, getBackendUrl } from './api';
 import './index.css';
 
 const TABS = [
-  { id: 'rag',       label: 'rag.ask',   shortLabel: 'RAG',     badge: 'RAG',      Icon: Bot         },
-  { id: 'ingest',    label: 'ingest',    shortLabel: 'Ingest',  badge: 'pgvector', Icon: Database    },
-  { id: 'chat',      label: 'chat',      shortLabel: 'Chat',    badge: 'LLM',      Icon: MessageSquare },
-  { id: 'summarize', label: 'summarize', shortLabel: 'Summarize', badge: 'struct', Icon: FileText    },
+  { id: 'home',      label: 'home',      shortLabel: 'Home',     badge: 'Start',    Icon: Home        },
+  { id: 'rag',       label: 'rag.ask',   shortLabel: 'RAG',      badge: 'RAG',      Icon: Bot         },
+  { id: 'ingest',    label: 'ingest',    shortLabel: 'Ingest',   badge: 'pgvector', Icon: Database    },
+  { id: 'chat',      label: 'chat',      shortLabel: 'Chat',     badge: 'LLM',      Icon: MessageSquare },
+  { id: 'summarize', label: 'summarize', shortLabel: 'Summarize', badge: 'struct',  Icon: FileText    },
 ];
 
 export default function App() {
-  const [activeTab, setActiveTab]       = useState('rag');
+  const [activeTab, setActiveTab]       = useState('home');
   const [isConnected, setIsConnected]   = useState(false);
   const [latency, setLatency]           = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -48,7 +50,7 @@ export default function App() {
         {/* Brand */}
         <div className="cmd-brand">
           <span className="cmd-brand-dot" />
-          <span className="cmd-brand-text">java-rag</span>
+          <span className="cmd-brand-text">SpringMind</span>
         </div>
 
         {/* Tab Navigation — desktop/tablet top bar */}
@@ -99,6 +101,9 @@ export default function App() {
 
       {/* ── Main Content ──────────────────────── */}
       <main className="main-area" id="main-content">
+        {activeTab === 'home' && (
+          <HomePage onNavigate={setActiveTab} />
+        )}
         {activeTab === 'rag' && (
           <RagAssistant
             showToast={showToast}
@@ -117,6 +122,7 @@ export default function App() {
         {activeTab === 'chat' && <ChatPlayground showToast={showToast} />}
         {activeTab === 'summarize' && <TextSummarizer showToast={showToast} />}
       </main>
+
 
       {/* ── Mobile Bottom Nav (≤640px) ────────── */}
       <nav className="mobile-nav" role="navigation" aria-label="Mobile navigation">
